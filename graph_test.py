@@ -26,14 +26,14 @@ def in_progress(args):
             data = json.load(f)
         except:
             print(input_file)
-            #raise
+            # raise
         # print(data['end'].keys())
         for item in data['intervals']:
             # print(item)
             # print('x is: ' + str(item['sum']['start']))
             x.append(item['sum']['start'])
             # print('y is: ' + str(item['sum']['bits_per_second']))
-            y.append(item['sum']['bits_per_second'] / 8e+6)        
+            y.append(item['sum']['bits_per_second'] / 8e+6)
         # create a color palette
         palette = plt.get_cmap('tab20b')
         plt.subplots_adjust(right=0.7)
@@ -47,7 +47,7 @@ def in_progress(args):
     plt.ylabel('Mbps')
     plt.xlabel('Time (Seconds)')
     plt.grid(True, color='k')
-    plt.legend(bbox_to_anchor=(1.04,1), loc="upper left")
+    plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     plt.show()
 
 
@@ -70,10 +70,11 @@ plt.show()
 # https://www.probytes.net/blog/plotting-graphs-in-python/
 # https://python-graph-gallery.com/124-spaghetti-plot/
 
+
 def main():
     args = parser.parse_args()
-    #files = args.f
-    #print(args)
+    # files = args.f
+    # print(args)
     in_progress(args)
 
 
