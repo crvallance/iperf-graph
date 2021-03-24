@@ -27,13 +27,12 @@ def key_parse(args, coded_name):
         elements = coded_name.split(delim)
     except:
         print('Something wrong')
-
+        raise
     for m in re.finditer(pattern, mask):
         mask_pos = m.group(1)
         p = re.compile(str(mask_pos))
         file_pos = int(m.group(1))-1
         result = p.sub(elements[file_pos], result, count=1)
-        #print(result)
     return(result)
 
 def in_progress(args):
@@ -54,20 +53,13 @@ def in_progress(args):
         except json.decoder.JSONDecodeError as e:
             print(e)
             sys.exit(input_file + ' has a JSON error')
-            # print(e)
-            # raise
-        # print(data['end'].keys())
         for item in data['intervals']:
-            # print(item)
-            # print('x is: ' + str(item['sum']['start']))
             x.append(item['sum']['start'])
-            # print('y is: ' + str(item['sum']['bits_per_second']))
             y.append(item['sum']['bits_per_second'] / 8e+6)
         # create a color palette
         palette = plt.get_cmap('tab20b')
         plt.subplots_adjust(right=0.7)
         plt.plot(x, y, color=palette(cp), label=label, linewidth=3)
-        # plt.plot(x1,y1,'c',label='line two',linewidth=5)
         cp += 1
     if args.title:
         plt.title(args.title)
@@ -85,8 +77,6 @@ def in_progress(args):
 
 def main():
     args = parser.parse_args()
-    # files = args.f
-    # print(args)
     in_progress(args)
 
 
