@@ -16,7 +16,7 @@ parser.add_argument("--title", help='Manually give the graph a title')
 key_parse = parser.add_argument_group()
 key_parse.add_argument("--kd", help='Designate a delimeter for filename to key parsing')
 key_parse.add_argument("--km", help='"Mask" for new desired output of key name.  Use numbers to designate order, omit fields, and additional text as needed.\nExample: "1 2 4 small 3" would produce "cat dog snake small fish" from a file called "cat_dog_fish_snake.json"')
-parser.add_argument("--noshow", help='Save to file without showing output')
+parser.add_argument("--noshow", action='store_const', const=True, help='Save to file without showing output')
 
 def key_parse(args, coded_name):
     pattern = re.compile(r'([0-9])')
@@ -78,8 +78,8 @@ def in_progress(args):
     plt.grid(True, color='k')
     plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     if args.noshow:
-        print(args.fi)
-        plt.savefig('foo.png')
+        imagefile = f.name.replace('json', 'png')
+        plt.savefig(imagefile)
     else:
         plt.show()
 
