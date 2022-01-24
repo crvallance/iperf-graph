@@ -1,11 +1,15 @@
-from matplotlib import pyplot as plt
-from matplotlib import style
 import json
 import pathlib
-import argparse
+# import argparse
 import re
 import sys
+from dataclasses import dataclass
 
+import click
+from matplotlib import pyplot as plt
+# from matplotlib import style
+
+'''
 parser = argparse.ArgumentParser(description='Somestuff!')
 parser.add_argument("--f", nargs='*', help='Pass in the files to be graphed together')
 # sum_stream = parser.add_mutually_exclusive_group(required=True)
@@ -17,6 +21,31 @@ key_parse = parser.add_argument_group()
 key_parse.add_argument("--kd", help='Designate a delimeter for filename to key parsing')
 key_parse.add_argument("--km", help='"Mask" for new desired output of key name.  Use numbers to designate order, omit fields, and additional text as needed.\nExample: "1 2 4 small 3" would produce "cat dog snake small fish" from a file called "cat_dog_fish_snake.json"')
 parser.add_argument("--noshow", action='store_const', const=True, help='Save to file without showing output')
+'''
+
+
+@dataclass()
+class ArgsShim():
+    f: str
+    title: str = None
+    noshow: str = None
+    kd: str = None
+    km: str = None
+
+
+@click.command()
+@click.argument('files', nargs=-1, type=click.Path())
+@click.option('--title', default='', type=str)
+@click.option('--noshow', is_flag=True, default=False)
+def new_args(**params):
+    # print(params['files'])
+    args = ArgsShim(f=params['files'])
+    if params['title']:
+        args.title = params['title']
+    if params['noshow']:
+        args.noshow = params['noshow']
+    in_progress(args)
+
 
 def key_parse(args, coded_name):
     pattern = re.compile(r'([0-9])')
@@ -25,15 +54,16 @@ def key_parse(args, coded_name):
     result = mask
     try:
         elements = coded_name.split(delim)
-    except:
-        print('Something wrong')
+    except ValueError as N:
+        print(f'Something wrong: {N}')
         raise
     for m in re.finditer(pattern, mask):
         mask_pos = m.group(1)
         p = re.compile(str(mask_pos))
-        file_pos = int(m.group(1))-1
+        file_pos = int(m.group(1)) - 1
         result = p.sub(elements[file_pos], result, count=1)
     return(result)
+
 
 def in_progress(args):
     # style
@@ -75,9 +105,9 @@ def in_progress(args):
     else:
         plt.show()
 
+
 def main():
-    args = parser.parse_args()
-    in_progress(args)
+    new_args()
 
 
 if __name__ == "__main__":
