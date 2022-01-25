@@ -1,27 +1,11 @@
 import json
 import pathlib
-# import argparse
 import re
 import sys
 from dataclasses import dataclass
 
 import click
 from matplotlib import pyplot as plt
-# from matplotlib import style
-
-'''
-parser = argparse.ArgumentParser(description='Somestuff!')
-parser.add_argument("--f", nargs='*', help='Pass in the files to be graphed together')
-# sum_stream = parser.add_mutually_exclusive_group(required=True)
-sum_stream = parser.add_mutually_exclusive_group(required=False)
-sum_stream.add_argument("--sum", action='store_true', help='Used to only graph sums')
-sum_stream.add_argument("--stream", action='store_true', help='Used to graph each stream')
-parser.add_argument("--title", help='Manually give the graph a title')
-key_parse = parser.add_argument_group()
-key_parse.add_argument("--kd", help='Designate a delimeter for filename to key parsing')
-key_parse.add_argument("--km", help='"Mask" for new desired output of key name.  Use numbers to designate order, omit fields, and additional text as needed.\nExample: "1 2 4 small 3" would produce "cat dog snake small fish" from a file called "cat_dog_fish_snake.json"')
-parser.add_argument("--noshow", action='store_const', const=True, help='Save to file without showing output')
-'''
 
 
 @dataclass()
