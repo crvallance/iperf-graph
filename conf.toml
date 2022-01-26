@@ -1,0 +1,12 @@
+[token_map]
+Client = 0
+Distance = 1
+UL-DL = 2
+
+title_order = [
+"Client",
+"UL-DL",
+"Distance",
+]
+
+delimiter = "_"
