@@ -15,27 +15,35 @@ class ArgsShim():
     title: str = None
     noshow: str = None
     label: str = None
+    config: Type[pathlib.Path] = None
 
 
 @click.command()
-@click.argument('files', nargs=-1, type=click.Path())
-@click.option('--title', default='', type=str)
-@click.option('--noshow', is_flag=True, default=False)
+@click.argument('files', nargs=-1, type=click.Path(), required=True)
+@click.option('--title', default='', type=str, help='Set graph title (use quotes for spaces)')
+@click.option('--noshow', is_flag=True, default=False, help='Run without graphical preview')
+@click.option('--config', default=None, type=click.Path(), help='Specify config file location other than current dir')
 def new_args(**params):
     args = ArgsShim(f=params['files'])
     if params['title']:
         args.title = params['title']
     if params['noshow']:
         args.noshow = params['noshow']
+    if params['config']:
+        args.config = params['config']
     grapher(args)
 
 
 def config_parse(filename: str) -> dict:
-    with open(filename, "rb") as f:
-        try:
-            toml_dict = tomli.load(f)
-        except tomli.TOMLDecodeError:
-            print("TOML File is not valid")
+    try:
+        with open(filename, "rb") as f:
+            try:
+                toml_dict = tomli.load(f)
+            except tomli.TOMLDecodeError:
+                print("TOML File is not valid")
+    except FileNotFoundError as err:
+        print(f'{err}')
+        sys.exit(2)
     return(toml_dict)
 
 
@@ -44,7 +52,7 @@ def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -
     settings = config_parse(config_filename)
     delim = settings['token_map']['delimiter']
     filename_chunks = data_filename.split(delim)
-    data_list = settings['token_map']['title_order']
+    data_list = settings['token_map']['label_order']
     for i, data in enumerate(data_list):
         position = settings['token_map'][data]
         label_part = filename_chunks[position]
@@ -63,7 +71,10 @@ def grapher(args: Type[ArgsShim]):
         x = []
         y = []
         bare_file = pathlib.Path(input_file).stem
-        label = label_tokenization(bare_file)
+        if args.config:
+            label = label_tokenization(bare_file, args.config)
+        else:
+            label = label_tokenization(bare_file)
         f = open(input_file)
         try:
             data = json.load(f)
