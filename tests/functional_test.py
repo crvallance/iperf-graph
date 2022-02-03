@@ -8,7 +8,7 @@ def test_help():
 
 
 def test_noshow():
-    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--noshow'], capture_output=True, text=True)
+    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--noshow', '--config', './examples/conf.toml'], capture_output=True, text=True)
     assert sum_cmd.returncode == 0
     file = pathlib.Path("examples/laptop_0ft_R.png")
     assert file.exists()
@@ -16,7 +16,7 @@ def test_noshow():
 
 
 def test_title():
-    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--noshow', '--title', 'the title'], capture_output=True, text=True)
+    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--noshow', '--title', 'the title', '--config', './examples/conf.toml'], capture_output=True, text=True)
     assert sum_cmd.returncode == 0
     file = pathlib.Path("examples/laptop_0ft_R.png")
     assert file.exists()
@@ -24,6 +24,15 @@ def test_title():
 
 
 def test_show():
-    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json'], capture_output=True, text=True)
+    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './examples/conf.toml'], capture_output=True, text=True)
     warning = 'UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
     assert warning in sum_cmd.stderr
+
+
+def test_config():
+    sum_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './examples/conf.toml'], capture_output=True, text=True)
+    assert sum_cmd.returncode == 0
+    borked_cmd = subprocess.run(['python3', 'iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './does-not-exist/conf.toml'], capture_output=True, text=True)
+    assert borked_cmd.returncode == 2
+    warning = "[Errno 2] No such file or directory: './does-not-exist/conf.toml'"
+    assert warning in borked_cmd.stdout
