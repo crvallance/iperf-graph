@@ -3,7 +3,7 @@ Client = 0
 Distance = 1
 UL-DL = 2
 
-title_order = [
+label_order = [
 "Client",
 "UL-DL",
 "Distance",
