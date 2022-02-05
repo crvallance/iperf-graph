@@ -2,3 +2,5 @@
 *.zip
 *.png
 *.pyc
+dist/
+src/iperf_grapher.egg-info*
