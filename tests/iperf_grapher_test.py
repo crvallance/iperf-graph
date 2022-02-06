@@ -2,7 +2,7 @@ import pathlib
 import hashlib
 
 import pytest
-from iperf_grapher import ArgsShim, grapher
+from src.iperf_grapher.iperf_grapher import ArgsShim, grapher
 
 
 def hasher(filename):
