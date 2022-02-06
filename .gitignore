@@ -5,3 +5,4 @@
 dist/
 src/iperf_grapher.egg-info*
 .coverage
+.vscode/*
