@@ -10,3 +10,9 @@ label_order = [
 ]
 
 delimiter = "_"
+
+[optional]
+# Change what units you want represented
+# The default is Mbps (Megbit per second)
+# Supported: Mbps, MBps, Gbps
+# speed_unit = "Mbps"
