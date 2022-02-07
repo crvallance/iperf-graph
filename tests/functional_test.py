@@ -33,6 +33,6 @@ def test_config():
     sum_cmd = subprocess.run(['python3', 'src/iperf_grapher/iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './examples/conf.toml'], capture_output=True, text=True)
     assert sum_cmd.returncode == 0
     borked_cmd = subprocess.run(['python3', 'src/iperf_grapher/iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './does-not-exist/conf.toml'], capture_output=True, text=True)
-    assert borked_cmd.returncode == 2
+    assert borked_cmd.returncode == 1
     warning = "[Errno 2] No such file or directory: './does-not-exist/conf.toml'"
     assert warning in borked_cmd.stdout

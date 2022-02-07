@@ -17,16 +17,40 @@ def hasher(filename):
 def arg_setup():
     example_file = 'laptop_0ft_S'
     args = ArgsShim(f=[f'./examples/{example_file}.json'])
+    args.noshow = True
     return(example_file, args)
 
 
-def test_grapher(arg_setup):
+def test_grapher_Mbps(arg_setup):
     example_file, args = arg_setup
-    args.noshow = True
     grapher(args)
     outfile = pathlib.Path(f'./examples/{example_file}.png')
     assert outfile.exists()
-    blake2b_hash = '659b6f5fba3bf14fac8fbe3b8dd63e0df554435d888f6102df70d6123253d8bb3b817b0dd2b432f2c745c8c820a3288a1349bc3947d3d7a3766a8b597698a58b'
+    blake2b_hash = 'a0a323e58ff4e40953c3c6180db4dc7496137b54279ed17924781ecf375918714f0a593c93d3d78ac535d2b7a5e645440791f43e078e4c0d25a8ae5d1f20a769'
+    calc_hash = hasher(outfile)
+    assert calc_hash == blake2b_hash
+    outfile.unlink()
+
+
+def test_grapher_MBps(arg_setup):
+    example_file, args = arg_setup
+    args.speed_unit = 'MBps'
+    grapher(args)
+    outfile = pathlib.Path(f'./examples/{example_file}.png')
+    assert outfile.exists()
+    blake2b_hash = 'a66e6c997e4d75b63b8aea6cf2f0c24ba795ab0761d8bbb8315a81df8d5e296f0b593dc2f0c5c926b783a88cca83a86ced1a09fd520942e421d2853199e6ad24'
+    calc_hash = hasher(outfile)
+    assert calc_hash == blake2b_hash
+    outfile.unlink()
+
+
+def test_grapher_Gbps(arg_setup):
+    example_file, args = arg_setup
+    args.speed_unit = 'Gbps'
+    grapher(args)
+    outfile = pathlib.Path(f'./examples/{example_file}.png')
+    assert outfile.exists()
+    blake2b_hash = '8404ae0d23110e216ee29f25c32e24eea084c327f5e40d41e46a9fc2409d3e681487e158e389764443f4ee57166da679bed615f5bd14738e1a33c914531ad6ae'
     calc_hash = hasher(outfile)
     assert calc_hash == blake2b_hash
     outfile.unlink()
