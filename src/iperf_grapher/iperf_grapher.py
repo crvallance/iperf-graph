@@ -16,6 +16,8 @@ class ArgsShim():
     noshow: str = None
     label: str = None
     config: Type[pathlib.Path] = None
+    speed_unit: str = 'Mbps'
+    speed_divisor: float = 1e+6
 
 
 @click.command()
@@ -43,7 +45,7 @@ def config_parse(filename: str) -> dict:
                 print("TOML File is not valid")
     except FileNotFoundError as err:
         print(f'{err}')
-        sys.exit(2)
+        sys.exit(1)
     return(toml_dict)
 
 
@@ -63,18 +65,38 @@ def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -
     return(label)
 
 
+def get_optional_speed_unit(args: Type[ArgsShim], config_filename: str = 'conf.toml') -> str:
+    settings = config_parse(config_filename)
+    try:
+        optional_section = settings['optional']
+    except KeyError:
+        return
+    if not optional_section.get('speed_unit') or optional_section['speed_unit'] == 'Mbps':
+        return
+    if optional_section['speed_unit'] == 'MBps':
+        args.speed_unit = 'MBps'
+        args.speed_divisor = 8e+6
+    elif optional_section['speed_unit'] == 'Gbps':
+        args.speed_unit = 'Gbps'
+        args.speed_divisor = 1e+9
+    else:
+        sys.exit('Unsupported speed unit, please check config file')
+
+
 def grapher(args: Type[ArgsShim]):
     # style
     plt.style.use('seaborn-darkgrid')
     cp = 1
+    bare_file = pathlib.Path(args.f[0]).stem
+    if args.config:
+        label = label_tokenization(bare_file, args.config)
+        get_optional_speed_unit(args, args.config)
+    else:
+        label = label_tokenization(bare_file)
+        get_optional_speed_unit(args)
     for input_file in args.f:
         x = []
         y = []
-        bare_file = pathlib.Path(input_file).stem
-        if args.config:
-            label = label_tokenization(bare_file, args.config)
-        else:
-            label = label_tokenization(bare_file)
         f = open(input_file)
         try:
             data = json.load(f)
@@ -83,7 +105,7 @@ def grapher(args: Type[ArgsShim]):
             sys.exit(input_file + ' has a JSON error')
         for item in data['intervals']:
             x.append(item['sum']['start'])
-            y.append(item['sum']['bits_per_second'] / 8e+6)
+            y.append(item['sum']['bits_per_second'] / args.speed_divisor)
         # create a color palette
         palette = plt.get_cmap('tab20b')
         plt.subplots_adjust(right=0.7)
@@ -93,7 +115,7 @@ def grapher(args: Type[ArgsShim]):
         plt.title(args.title)
     else:
         plt.title('iPerf Data')
-    plt.ylabel('Mbps')
+    plt.ylabel(args.speed_unit)
     plt.xlabel('Time (Seconds)')
     plt.grid(True, color='k')
     plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
