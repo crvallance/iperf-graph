@@ -18,6 +18,7 @@ def arg_setup():
     example_file = 'laptop_0ft_S'
     args = ArgsShim(f=[f'./examples/{example_file}.json'])
     args.noshow = True
+    args.config = pathlib.Path(f'./examples/conf.toml')
     return(example_file, args)
 
 
