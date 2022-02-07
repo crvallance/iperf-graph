@@ -1,14 +1,19 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
+name = "pypi"
+
+[packages]
+tomli = "*"
+matplotlib = "*"
+click = "*"
 
 [dev-packages]
 flake8 = "*"
 pytest = "*"
-
-[packages]
-matplotlib = "*"
+build = "*"
+rich = "*"
+tomli-w = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
