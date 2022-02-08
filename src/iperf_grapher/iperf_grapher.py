@@ -126,30 +126,6 @@ def grapher(args: Type[ArgsShim]):
         plt.show()
 
 
-def bar_graph(args: Type[ArgsShim]):
-    plt.style.use('seaborn-darkgrid')
-    cp = 1
-    bare_file = pathlib.Path(args.f[0]).stem
-    if args.config:
-        label = label_tokenization(bare_file, args.config)
-        get_optional_speed_unit(args, args.config)
-    else:
-        label = label_tokenization(bare_file)
-        get_optional_speed_unit(args)
-    for input_file in args.f:
-        x = []
-        y = []
-        f = open(input_file)
-        try:
-            data = json.load(f)
-        except json.decoder.JSONDecodeError as e:
-            print(e)
-            sys.exit(input_file + ' has a JSON error')
-        for item in data['end']:
-            x.append(item['sum']['start'])
-            y.append(item['sum_sent']['bits_per_second'] / args.speed_divisor)
-
-
 def main():
     new_args()
 
