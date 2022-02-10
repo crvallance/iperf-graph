@@ -86,15 +86,12 @@ def get_optional_speed_unit(args: Type[ArgsShim], config_filename: str = 'conf.t
 def grapher(args: Type[ArgsShim]):
     # style
     plt.style.use('seaborn-darkgrid')
-    cp = 1
-    bare_file = pathlib.Path(args.f[0]).stem
     if args.config:
-        label = label_tokenization(bare_file, args.config)
         get_optional_speed_unit(args, args.config)
     else:
-        label = label_tokenization(bare_file)
         get_optional_speed_unit(args)
-    for input_file in args.f:
+    for cp, input_file in enumerate(args.f):
+        bare_file = pathlib.Path(input_file).stem
         x = []
         y = []
         f = open(input_file)
@@ -103,6 +100,10 @@ def grapher(args: Type[ArgsShim]):
         except json.decoder.JSONDecodeError as e:
             print(e)
             sys.exit(input_file + ' has a JSON error')
+        if args.config:
+            label = label_tokenization(bare_file, args.config)
+        else:
+            label = label_tokenization(bare_file)
         for item in data['intervals']:
             x.append(item['sum']['start'])
             y.append(item['sum']['bits_per_second'] / args.speed_divisor)
@@ -110,7 +111,6 @@ def grapher(args: Type[ArgsShim]):
         palette = plt.get_cmap('tab20b')
         plt.subplots_adjust(right=0.7)
         plt.plot(x, y, color=palette(cp), label=label, linewidth=3)
-        cp += 1
     if args.title:
         plt.title(args.title)
     else:

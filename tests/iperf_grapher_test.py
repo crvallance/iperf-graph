@@ -18,7 +18,7 @@ def arg_setup():
     example_file = 'laptop_0ft_S'
     args = ArgsShim(f=[f'./examples/{example_file}.json'])
     args.noshow = True
-    args.config = pathlib.Path(f'./examples/conf.toml')
+    args.config = pathlib.Path('./examples/conf.toml')
     return(example_file, args)
 
 
@@ -27,7 +27,7 @@ def test_grapher_Mbps(arg_setup):
     grapher(args)
     outfile = pathlib.Path(f'./examples/{example_file}.png')
     assert outfile.exists()
-    blake2b_hash = 'a0a323e58ff4e40953c3c6180db4dc7496137b54279ed17924781ecf375918714f0a593c93d3d78ac535d2b7a5e645440791f43e078e4c0d25a8ae5d1f20a769'
+    blake2b_hash = '64f97f6eee33bf32f02db5c60013c09178d7c5f99212e90b7e5e49a30cb10ec738ff8adcd1fbeac644228753d895b1df86f277486ce4052abc68a8032cae0628'
     calc_hash = hasher(outfile)
     assert calc_hash == blake2b_hash
     outfile.unlink()
@@ -39,7 +39,7 @@ def test_grapher_MBps(arg_setup):
     grapher(args)
     outfile = pathlib.Path(f'./examples/{example_file}.png')
     assert outfile.exists()
-    blake2b_hash = 'a66e6c997e4d75b63b8aea6cf2f0c24ba795ab0761d8bbb8315a81df8d5e296f0b593dc2f0c5c926b783a88cca83a86ced1a09fd520942e421d2853199e6ad24'
+    blake2b_hash = 'cbaad0799f6250954786fca0c5e717a3a0a95e05a785277f80282c1f3fa3a7d8a1314495be4b94e4c2de4de86e5a20df67703d5fdb272dabb9eace76ec08227c'
     calc_hash = hasher(outfile)
     assert calc_hash == blake2b_hash
     outfile.unlink()
@@ -51,7 +51,7 @@ def test_grapher_Gbps(arg_setup):
     grapher(args)
     outfile = pathlib.Path(f'./examples/{example_file}.png')
     assert outfile.exists()
-    blake2b_hash = '8404ae0d23110e216ee29f25c32e24eea084c327f5e40d41e46a9fc2409d3e681487e158e389764443f4ee57166da679bed615f5bd14738e1a33c914531ad6ae'
+    blake2b_hash = 'a2d49e50c14fe6b1aff0291702b6665e0b9ff098e31d47c9036dd450bd6ae6cb26f90398fddd21028069562f5e3dd760c06d15d60f12cb51c13c5c4b16740526'
     calc_hash = hasher(outfile)
     assert calc_hash == blake2b_hash
     outfile.unlink()
