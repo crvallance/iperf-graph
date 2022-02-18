@@ -16,15 +16,17 @@ class ArgsShim():
     noshow: str = None
     label: str = None
     config: Type[pathlib.Path] = None
+    outfile: Type[pathlib.Path] = None
     speed_unit: str = 'Mbps'
     speed_divisor: float = 1e+6
 
 
 @click.command()
-@click.argument('files', nargs=-1, type=click.Path(), required=True)
+@click.argument('files', nargs=-1, type=click.Path(path_type=pathlib.Path), required=True)
 @click.option('--title', default='', type=str, help='Set graph title (use quotes for spaces)')
 @click.option('--noshow', is_flag=True, default=False, help='Run without graphical preview')
-@click.option('--config', default=None, type=click.Path(), help='Specify config file location other than current dir')
+@click.option('--outfile', type=click.Path(path_type=pathlib.Path), help='Specify output filename and location')
+@click.option('--config', default=None, type=click.Path(path_type=pathlib.Path), help='Specify config file location other than current dir')
 def new_args(**params):
     args = ArgsShim(f=params['files'])
     if params['title']:
@@ -33,6 +35,8 @@ def new_args(**params):
         args.noshow = params['noshow']
     if params['config']:
         args.config = params['config']
+    if params['outfile']:
+        args.outfile = params['outfile']
     grapher(args)
 
 
@@ -120,10 +124,24 @@ def grapher(args: Type[ArgsShim]):
     plt.grid(True, color='k')
     plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
     if args.noshow:
-        imagefile = f.name.replace('json', 'png')
+        imagefile = pathlib.Path(f.name.replace('json', 'png'))
+        if args.outfile:
+            imagefile = file_extension_check(args.outfile)
         plt.savefig(imagefile)
     else:
         plt.show()
+
+
+def file_extension_check(filename: Type[pathlib.Path]):
+    try:
+        if filename.suffix == '.png':
+            return(filename)
+        else:
+            newname = filename.with_suffix('.png')
+            return(newname)
+    except(AttributeError) as e:
+        print(f'Got something other than posix path: {e}')
+        raise
 
 
 def main():

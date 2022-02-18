@@ -2,7 +2,7 @@ import pathlib
 import hashlib
 
 import pytest
-from src.iperf_grapher.iperf_grapher import ArgsShim, grapher
+from src.iperf_grapher.iperf_grapher import ArgsShim, grapher, file_extension_check
 
 
 def hasher(filename):
@@ -55,3 +55,12 @@ def test_grapher_Gbps(arg_setup):
     calc_hash = hasher(outfile)
     assert calc_hash == blake2b_hash
     outfile.unlink()
+
+
+def test_file_extension_check():
+    ok_file_path = pathlib.Path('im-a-file')
+    good_file_path = pathlib.Path('im-another-file.png')
+    assert file_extension_check(ok_file_path) == pathlib.Path('im-a-file.png')
+    assert file_extension_check(good_file_path) == pathlib.Path('im-another-file.png')
+    with pytest.raises(AttributeError):
+        file_extension_check('bad_string')
