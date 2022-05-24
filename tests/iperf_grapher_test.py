@@ -2,7 +2,7 @@ import pathlib
 import hashlib
 
 import pytest
-from src.iperf_grapher.iperf_grapher import ArgsShim, grapher, file_extension_check
+from src.iperf_grapher.iperf_grapher import ArgsShim, grapher, file_extension_check, config_parse
 
 
 def hasher(filename):
@@ -21,6 +21,11 @@ def arg_setup():
     args.config = pathlib.Path('./examples/conf.toml')
     return(example_file, args)
 
+@pytest.fixture
+def bad_config_file_setup(tmp_path):
+    config_file = tmp_path / 'file.txt'
+    config_file.write_text('bad data')
+    return(config_file)
 
 def test_grapher_Mbps(arg_setup):
     example_file, args = arg_setup
@@ -64,3 +69,13 @@ def test_file_extension_check():
     assert file_extension_check(good_file_path) == pathlib.Path('im-another-file.png')
     with pytest.raises(AttributeError):
         file_extension_check('bad_string')
+
+def test_config_parse(bad_config_file_setup):
+    with pytest.raises(SystemExit):
+        config_parse(bad_config_file_setup)
+    good_config = pathlib.Path(f'./examples/conf.toml')
+    toml_dict = {'token_map': {'Client': 0, 'Distance': 1, 'UL-DL': 2, 'label_order': ['Client', 'UL-DL', 'Distance'], 'delimiter': '_'}, 'optional': {}}
+    assert config_parse(good_config) == toml_dict
+    no_such_file = pathlib.Path('I-am-not-real.txt')
+    with pytest.raises(SystemExit):
+        config_parse(no_such_file)
