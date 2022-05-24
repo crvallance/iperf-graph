@@ -47,6 +47,7 @@ def config_parse(filename: str) -> dict:
                 toml_dict = tomli.load(f)
             except tomli.TOMLDecodeError:
                 print("TOML File is not valid")
+                sys.exit(1)
     except FileNotFoundError as err:
         print(f'{err}')
         sys.exit(1)
