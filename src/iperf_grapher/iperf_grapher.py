@@ -8,6 +8,8 @@ import click
 from matplotlib import pyplot as plt
 import tomli
 
+from .config_file import Config
+
 
 @dataclass()
 class ArgsShim():
@@ -56,7 +58,9 @@ def config_parse(filename: str) -> dict:
 
 def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -> str:
     label = ''
-    settings = config_parse(config_filename)
+    # settings = config_parse(config_filename)
+    config = Config(config_filename)
+    settings = config.get_settings()
     delim = settings['token_map']['delimiter']
     filename_chunks = data_filename.split(delim)
     data_list = settings['token_map']['label_order']
@@ -71,7 +75,9 @@ def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -
 
 
 def get_optional_speed_unit(args: Type[ArgsShim], config_filename: str = 'conf.toml') -> str:
-    settings = config_parse(config_filename)
+    # settings = config_parse(config_filename)
+    config = Config(config_filename)
+    settings = config.get_settings()
     try:
         optional_section = settings['optional']
     except KeyError:
