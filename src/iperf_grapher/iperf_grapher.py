@@ -8,7 +8,7 @@ import click
 from matplotlib import pyplot as plt
 import tomli
 
-from .config_file import Config
+# from .config_file import Config
 
 
 @dataclass()
@@ -58,12 +58,10 @@ def config_parse(filename: str) -> dict:
 
 def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -> str:
     label = ''
-    # settings = config_parse(config_filename)
-    config = Config(config_filename)
-    settings = config.get_settings()
-    delim = settings['token_map']['delimiter']
+    settings = config_parse(config_filename)
+    delim = settings['filename_map']['delimiter']
     filename_chunks = data_filename.split(delim)
-    data_list = settings['token_map']['label_order']
+    data_list = settings['legend']['label_order']
     for i, data in enumerate(data_list):
         position = settings['token_map'][data]
         label_part = filename_chunks[position]
@@ -75,9 +73,7 @@ def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -
 
 
 def get_optional_speed_unit(args: Type[ArgsShim], config_filename: str = 'conf.toml') -> str:
-    # settings = config_parse(config_filename)
-    config = Config(config_filename)
-    settings = config.get_settings()
+    settings = config_parse(config_filename)
     try:
         optional_section = settings['optional']
     except KeyError:

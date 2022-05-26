@@ -3,12 +3,14 @@ Client = 0
 Distance = 1
 UL-DL = 2
 
+[legend]
 label_order = [
 "Client",
 "UL-DL",
-"Distance",
+"Distance"
 ]
 
+[filename_map]
 delimiter = "_"
 
 [optional]
