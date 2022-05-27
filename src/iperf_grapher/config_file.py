@@ -6,7 +6,11 @@ class Config():
     def __init__(self, config_file: Type[pathlib.Path] = None):
         self.__config = config_file
         toml = TomlReader().load(self.__config)
-        self.__tokens = TokenMapConfig(toml)
+        self.__conf_data = TokenMapConfig(toml)
+
+    @property
+    def config_item(self):
+        return(self.__conf_data)
 
 class TokenMapConfig():
     def __init__(self, data):
