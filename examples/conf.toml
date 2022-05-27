@@ -1,4 +1,7 @@
-[token_map]
+[filename_parsing]
+delimiter = "_"
+
+[filename_parsing.tokens]
 Client = 0
 Distance = 1
 UL-DL = 2
@@ -10,11 +13,10 @@ label_order = [
 "Distance"
 ]
 
-[filename_map]
-delimiter = "_"
-
 [optional]
 # Change what units you want represented
 # The default is Mbps (Megbit per second)
 # Supported: Mbps, MBps, Gbps
 # speed_unit = "Mbps"
+
+

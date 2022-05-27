@@ -74,7 +74,7 @@ def test_config_parse(bad_config_file_setup):
     with pytest.raises(SystemExit):
         config_parse(bad_config_file_setup)
     good_config = pathlib.Path(f'./examples/conf.toml')
-    toml_dict = {'token_map': {'Client': 0, 'Distance': 1, 'UL-DL': 2}, 'legend': {'label_order': ['Client', 'UL-DL', 'Distance']}, 'filename_map': {'delimiter': '_'}, 'optional': {}}
+    toml_dict = {'filename_parsing': {'delimiter': '_', 'tokens': {'Client': 0, 'Distance': 1, 'UL-DL': 2}}, 'legend': {'label_order': ['Client', 'UL-DL', 'Distance']}, 'optional': {}}
     assert config_parse(good_config) == toml_dict
     no_such_file = pathlib.Path('I-am-not-real.txt')
     with pytest.raises(SystemExit):

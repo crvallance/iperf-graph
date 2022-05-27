@@ -59,11 +59,11 @@ def config_parse(filename: str) -> dict:
 def label_tokenization(data_filename: str, config_filename: str = 'conf.toml') -> str:
     label = ''
     settings = config_parse(config_filename)
-    delim = settings['filename_map']['delimiter']
+    delim = settings['filename_parsing']['delimiter']
     filename_chunks = data_filename.split(delim)
     data_list = settings['legend']['label_order']
     for i, data in enumerate(data_list):
-        position = settings['token_map'][data]
+        position = settings['filename_parsing']['tokens'][data]
         label_part = filename_chunks[position]
         if i != len(data_list) - 1:
             label += f'{label_part} '
