@@ -6,15 +6,26 @@ class Config():
     def __init__(self, config_file: Type[pathlib.Path] = None):
         self.__config = config_file
         toml = TomlReader().load(self.__config)
-        self.__token_map = TokenMapConfig(toml['token_map'])
+        self.__tokens = TokenMapConfig(toml)
 
 class TokenMapConfig():
     def __init__(self, data):
-        self.__delimiter = data['delimiter']
+        self.__delimiter = data['filename_parsing']['delimiter']
+        self.__label_order = data['legend']['label_order']
+        self.__tokens = data['filename_parsing']['tokens']
     
     @property
-    def Delimiter(self):
+    def delimiter(self):
         return(self.__delimiter)
+    
+    @property
+    def label_order(self):
+        return(self.__label_order)
+
+    @property
+    def tokens(self):
+        return(self.__tokens)
+
 
 class TomlReader():
     def load(self, config_file):
