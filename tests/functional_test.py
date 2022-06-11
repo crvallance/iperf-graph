@@ -21,7 +21,7 @@ def test_title():
     assert file.exists()
     file.unlink()
 
-#@pytest.mark.xfail
+@pytest.mark.xfail
 def test_show():
     sum_cmd = subprocess.run(['python3', 'src/iperf_grapher/iperf_grapher.py', 'examples/laptop_0ft_R.json', '--config', './examples/conf.toml'], capture_output=True, text=True)
     warning = 'UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.'
